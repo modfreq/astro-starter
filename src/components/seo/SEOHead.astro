@@ -1,0 +1,64 @@
+---
+import { seoConfig } from "@/config/seo";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string | undefined;
+  canonicalUrl?: string | undefined;
+  type?: "website" | "article" | undefined;
+  publishedDate?: Date | undefined;
+  updatedDate?: Date | undefined;
+  noindex?: boolean | undefined;
+}
+
+const {
+  title,
+  description,
+  image,
+  canonicalUrl,
+  type = "website",
+  publishedDate,
+  updatedDate,
+  noindex = false,
+} = Astro.props;
+
+const { siteName, siteUrl, defaultImage, locale, twitterHandle } = seoConfig;
+
+const formattedTitle = title === siteName ? siteName : `${title} — ${siteName}`;
+const canonical = canonicalUrl ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = new URL(image ?? defaultImage, siteUrl).href;
+---
+
+<title>{formattedTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:url" content={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content={locale} />
+
+{type === "article" && publishedDate && (
+  <meta property="article:published_time" content={publishedDate.toISOString()} />
+)}
+{type === "article" && updatedDate && (
+  <meta property="article:modified_time" content={updatedDate.toISOString()} />
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+{twitterHandle && <meta name="twitter:site" content={twitterHandle} />}
+
+<!-- Discovery -->
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+
+{noindex && <meta name="robots" content="noindex, nofollow" />}

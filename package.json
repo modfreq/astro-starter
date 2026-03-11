@@ -20,6 +20,7 @@
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.17",
     "@astrojs/sitemap": "^3",
     "@tailwindcss/vite": "^4.2.1",
     "@types/react": "^19.2.14",

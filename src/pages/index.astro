@@ -2,6 +2,10 @@
 import "@/styles/global.css";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
+import SEOHead from "@/components/seo/SEOHead.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { seoConfig } from "@/config/seo";
+import { websiteSchema } from "@/components/seo/schemas";
 ---
 
 <html lang="en">
@@ -10,7 +14,8 @@ import { Button } from "@/components/ui/button";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Starter</title>
+    <SEOHead title={seoConfig.siteName} description={seoConfig.siteDescription} />
+    <JsonLd schema={websiteSchema(seoConfig)} />
     <script is:inline>
       if (
         localStorage.getItem("theme") === "dark" ||

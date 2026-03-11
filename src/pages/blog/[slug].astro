@@ -4,6 +4,10 @@ import { getCollection, render } from "astro:content";
 import { ModeToggle } from "@/components/ModeToggle";
 import BlogPostMeta from "@/components/blog/BlogPostMeta.astro";
 import { getReadingTime } from "@/lib/reading-time";
+import SEOHead from "@/components/seo/SEOHead.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { seoConfig } from "@/config/seo";
+import { blogPostingSchema, breadcrumbSchema } from "@/components/seo/schemas";
 
 export const prerender = true;
 
@@ -28,8 +32,27 @@ const readingTime = getReadingTime(post.body ?? "");
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{post.data.title} — Astro Starter</title>
-    <meta name="description" content={post.data.description} />
+    <SEOHead
+      title={post.data.title}
+      description={post.data.description}
+      image={post.data.heroImage?.src}
+      type="article"
+      publishedDate={post.data.date}
+      updatedDate={post.data.updatedDate}
+    />
+    <JsonLd schema={blogPostingSchema({
+      title: post.data.title,
+      description: post.data.description,
+      date: post.data.date,
+      updatedDate: post.data.updatedDate,
+      heroImage: post.data.heroImage?.src,
+      slug: post.id,
+    }, seoConfig.siteUrl)} />
+    <JsonLd schema={breadcrumbSchema([
+      { name: "Home", url: seoConfig.siteUrl },
+      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
+      { name: post.data.title, url: `${seoConfig.siteUrl}/blog/${post.id}/` },
+    ])} />
     <script is:inline>
       if (
         localStorage.getItem("theme") === "dark" ||

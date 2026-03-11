@@ -3,6 +3,10 @@ import "@/styles/global.css";
 import { getCollection } from "astro:content";
 import { ModeToggle } from "@/components/ModeToggle";
 import BlogPostCard from "@/components/blog/BlogPostCard.astro";
+import SEOHead from "@/components/seo/SEOHead.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { seoConfig } from "@/config/seo";
+import { breadcrumbSchema } from "@/components/seo/schemas";
 
 export const prerender = true;
 
@@ -17,8 +21,11 @@ const posts = (await getCollection("blog", ({ data }) => {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Blog — Astro Starter</title>
-    <meta name="description" content="Blog posts from the Astro Starter template." />
+    <SEOHead title="Blog" description="Thoughts, guides, and updates from the Astro Starter template." />
+    <JsonLd schema={breadcrumbSchema([
+      { name: "Home", url: seoConfig.siteUrl },
+      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
+    ])} />
     <script is:inline>
       if (
         localStorage.getItem("theme") === "dark" ||
