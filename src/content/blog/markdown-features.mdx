@@ -1,0 +1,85 @@
+---
+title: "Markdown Features"
+description: "A showcase of all the typography and formatting features supported in blog posts."
+date: 2024-01-10
+tags: ["guide", "markdown"]
+---
+
+This post demonstrates all the formatting features available in your blog posts. Use it as a reference while writing.
+
+## Text Formatting
+
+You can write **bold text**, *italic text*, and ***bold italic text***. Use `inline code` for technical terms and ~~strikethrough~~ for corrections.
+
+## Links
+
+Here's a link to the [Astro documentation](https://docs.astro.build). Links are styled with an underline and use the theme's primary color.
+
+## Blockquotes
+
+> "The best way to predict the future is to invent it."
+> — Alan Kay
+
+Blockquotes are styled with a left border and muted text color.
+
+## Lists
+
+### Unordered List
+
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+
+### Ordered List
+
+1. First step
+2. Second step
+3. Third step
+
+## Code Blocks
+
+Inline code looks like `const x = 42`, and code blocks look like this:
+
+```typescript
+import { defineCollection, z } from "astro:content";
+
+const blog = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+  }),
+});
+
+export const collections = { blog };
+```
+
+## Tables
+
+| Feature     | Status |
+| ----------- | ------ |
+| MDX Support | Yes    |
+| Dark Mode   | Yes    |
+| TypeScript  | Yes    |
+| RSS Feed    | Soon   |
+
+## Horizontal Rules
+
+Content above the rule.
+
+---
+
+Content below the rule.
+
+## Headings
+
+The heading levels above (`h2` through `h4`) show the typographic scale. Each level has appropriate spacing and sizing for a comfortable reading experience.
+
+### Third-Level Heading
+
+Content under a third-level heading.
+
+#### Fourth-Level Heading
+
+Content under a fourth-level heading.

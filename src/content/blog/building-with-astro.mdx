@@ -1,0 +1,54 @@
+---
+title: "Building with Astro"
+description: "An overview of Astro's content-first architecture and why it's a great choice for blogs and marketing sites."
+date: 2024-01-05
+updatedDate: 2024-01-12
+tags: ["astro", "web"]
+---
+
+Astro is a web framework designed for content-driven websites. It ships zero JavaScript by default and lets you use your favorite UI components from React, Vue, Svelte, or others through its Islands architecture.
+
+## Why Astro?
+
+Astro is purpose-built for content sites like blogs, documentation, and marketing pages. Here's what makes it stand out:
+
+- **Zero JS by default** — pages are rendered as static HTML with no client-side JavaScript unless you explicitly add it
+- **Islands architecture** — interactive components hydrate independently, keeping pages fast
+- **Content collections** — type-safe content with built-in schema validation using Zod
+- **Framework agnostic** — use React, Vue, Svelte, or plain HTML in the same project
+
+## Content Collections
+
+This blog uses Astro's Content Layer API to manage posts. Each `.mdx` file in `src/content/blog/` is validated against a Zod schema, giving you type safety for frontmatter fields like titles, dates, and tags.
+
+```typescript
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+```
+
+## The Islands Architecture
+
+Most blog pages don't need JavaScript at all. But when you do need interactivity — like a dark mode toggle or a search widget — Astro lets you hydrate individual components:
+
+```astro
+---
+import { ModeToggle } from "@/components/ModeToggle";
+---
+
+<!-- Only this component ships JavaScript to the browser -->
+<ModeToggle client:load />
+```
+
+The rest of the page remains static HTML, keeping your site fast.
+
+## Deployment
+
+This starter template supports both Cloudflare Pages and Node.js deployments. Set the `ADAPTER` environment variable to switch between them:
+
+- `cloudflare` (default) — deploy to Cloudflare Pages with edge rendering
+- `node` — deploy to any Node.js host with a standalone server
+
+## Learn More
+
+Visit the [Astro documentation](https://docs.astro.build) for guides, API references, and more. The [Astro Discord](https://astro.build/chat) is a great place to ask questions and connect with the community.

@@ -1,0 +1,65 @@
+---
+import "@/styles/global.css";
+import { getCollection, render } from "astro:content";
+import { ModeToggle } from "@/components/ModeToggle";
+import BlogPostMeta from "@/components/blog/BlogPostMeta.astro";
+import { getReadingTime } from "@/lib/reading-time";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  });
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const readingTime = getReadingTime(post.body ?? "");
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{post.data.title} — Astro Starter</title>
+    <meta name="description" content={post.data.description} />
+    <script is:inline>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  </head>
+  <body class="font-sans antialiased">
+    <main class="mx-auto max-w-3xl px-4 py-16">
+      <div class="flex items-center justify-between">
+        <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+        <ModeToggle client:load />
+      </div>
+      <article class="mt-8">
+        <h1 class="text-4xl font-bold tracking-tight">{post.data.title}</h1>
+        <div class="mt-3">
+          <BlogPostMeta
+            date={post.data.date}
+            readingTime={readingTime}
+            updatedDate={post.data.updatedDate}
+            tags={post.data.tags}
+          />
+        </div>
+        <div class="prose mt-8">
+          <Content />
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+---
+title: "Getting Started with Your Blog"
+description: "Learn how to create new blog posts, configure frontmatter, and use the draft feature in this Astro starter template."
+date: 2024-01-15
+tags: ["guide", "astro"]
+---
+
+Welcome to your new blog! This starter template makes it easy to create content-focused sites with Astro. Here's everything you need to know to start writing.
+
+## Creating a New Post
+
+Add a new `.mdx` file to `src/content/blog/`. The filename becomes the URL slug — for example, `my-first-post.mdx` becomes `/blog/my-first-post`.
+
+## Frontmatter Reference
+
+Every post needs frontmatter at the top of the file:
+
+| Field          | Type       | Required | Description                        |
+| -------------- | ---------- | -------- | ---------------------------------- |
+| `title`        | `string`   | Yes      | The post title                     |
+| `description`  | `string`   | Yes      | Short summary for SEO and previews |
+| `date`         | `date`     | Yes      | Publication date (YYYY-MM-DD)      |
+| `updatedDate`  | `date`     | No       | Last updated date                  |
+| `heroImage`    | `string`   | No       | Path to hero image in `src/assets` |
+| `heroImageAlt` | `string`   | No       | Alt text for the hero image        |
+| `tags`         | `string[]` | No       | Array of tag labels                |
+| `draft`        | `boolean`  | No       | Set `true` to hide in production   |
+
+## The Draft Feature
+
+Set `draft: true` in your frontmatter to hide a post from the production site. Drafts are still visible during development (`pnpm dev`) so you can preview them while writing.
+
+```mdx
+---
+title: "Work in Progress"
+description: "This post isn't ready yet."
+date: 2024-01-20
+draft: true
+---
+```
+
+## What's Next
+
+- Add images to `src/assets/images/` and reference them with the `heroImage` field
+- Explore the [Markdown Features](/blog/markdown-features) post to see all supported formatting
+- Read [Building with Astro](/blog/building-with-astro) for an overview of the framework
