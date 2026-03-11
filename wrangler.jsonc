@@ -3,14 +3,5 @@
   "name": "astro-starter",
   "compatibility_date": "2025-12-01",
   "compatibility_flags": ["nodejs_compat"],
-  "pages_build_output_dir": "dist",
-
-  // Uncomment when you add a D1 database (Phase 3)
-  // "d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "astro-starter-db",
-  //     "database_id": "<your-database-id>"
-  //   }
-  // ]
+  "pages_build_output_dir": "dist"
 }
