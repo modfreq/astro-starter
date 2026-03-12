@@ -131,6 +131,14 @@
   --pagefind-ui-font: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Disable transitions during theme switch to prevent staggered color updates */
+html.no-transitions,
+html.no-transitions *,
+html.no-transitions *::before,
+html.no-transitions *::after {
+  transition: none !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
