@@ -6,6 +6,12 @@ interface SiteConfig {
   siteDescription: string;
 }
 
+interface BlogPostAuthor {
+  name: string;
+  url?: string | undefined;
+  sameAs?: string[] | undefined;
+}
+
 interface BlogPostInput {
   title: string;
   description: string;
@@ -13,7 +19,7 @@ interface BlogPostInput {
   updatedDate?: Date | undefined;
   heroImage?: string | undefined;
   slug: string;
-  author?: string | undefined;
+  author?: string | BlogPostAuthor | undefined;
   category?: string | undefined;
 }
 
@@ -62,10 +68,20 @@ export function blogPostingSchema(
     url: `${siteUrl}/blog/${post.slug}/`,
     mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/blog/${post.slug}/` },
     ...(post.category && { articleSection: post.category }),
-    author: {
-      "@type": "Person",
-      name: post.author ?? seoConfig.author,
-    },
+    author: (() => {
+      if (typeof post.author === "object" && post.author) {
+        return {
+          "@type": "Person" as const,
+          name: post.author.name,
+          ...(post.author.url && { url: post.author.url }),
+          ...(post.author.sameAs?.length && { sameAs: post.author.sameAs }),
+        };
+      }
+      return {
+        "@type": "Person" as const,
+        name: (post.author as string | undefined) ?? seoConfig.author,
+      };
+    })(),
   };
 }
 

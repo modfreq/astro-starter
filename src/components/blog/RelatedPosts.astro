@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BlogPostCard from "./BlogPostCard.astro";
+import { resolveAuthor } from "@/lib/authors";
+import type { ResolvedAuthor } from "@/lib/authors";
 
 interface Props {
   currentSlug: string;
@@ -20,6 +22,12 @@ const related = allPosts
   .sort((a, b) => b.shared - a.shared || b.post.data.date.valueOf() - a.post.data.date.valueOf())
   .slice(0, 3)
   .map((r) => r.post);
+
+const authorIds = [...new Set(related.map((p) => p.data.author))];
+const authorEntries = await Promise.all(authorIds.map((id) => resolveAuthor(id)));
+const authorMap = new Map<string, ResolvedAuthor>(
+  authorIds.map((id, i) => [id, authorEntries[i]]),
+);
 ---
 
 {related.length > 0 && (
@@ -34,6 +42,7 @@ const related = allPosts
           slug={post.id}
           tags={post.data.tags}
           category={post.data.category}
+          author={authorMap.get(post.data.author)}
         />
       ))}
     </div>

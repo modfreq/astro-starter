@@ -7,4 +7,5 @@ export const seoConfig = {
   locale: "en_US",
   twitterHandle: "",
   author: "Astro Starter",
+  defaultAuthorId: "default",
 } as const;

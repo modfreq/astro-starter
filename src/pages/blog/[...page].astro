@@ -7,6 +7,8 @@ import Pagination from "@/components/blog/Pagination.astro";
 import JsonLd from "@/components/seo/JsonLd.astro";
 import { seoConfig } from "@/config/seo";
 import { breadcrumbSchema } from "@/components/seo/schemas";
+import { resolveAuthor } from "@/lib/authors";
+import type { ResolvedAuthor } from "@/lib/authors";
 
 export const prerender = true;
 
@@ -21,6 +23,12 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props;
 const title = page.currentPage === 1 ? "Blog" : `Blog — Page ${page.currentPage}`;
+
+const authorIds = [...new Set(page.data.map((p) => p.data.author))];
+const authorEntries = await Promise.all(authorIds.map((id) => resolveAuthor(id)));
+const authorMap = new Map<string, ResolvedAuthor>(
+  authorIds.map((id, i) => [id, authorEntries[i]]),
+);
 ---
 
 <BaseLayout title={title} description="Thoughts, guides, and updates from the Astro Starter template.">
@@ -46,6 +54,7 @@ const title = page.currentPage === 1 ? "Blog" : `Blog — Page ${page.currentPag
           slug={post.id}
           tags={post.data.tags}
           category={post.data.category}
+          author={authorMap.get(post.data.author)}
         />
       ))}
     </div>

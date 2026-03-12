@@ -6,7 +6,9 @@ import BlogPostMeta from "@/components/blog/BlogPostMeta.astro";
 import TableOfContents from "@/components/blog/TableOfContents.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
 import ShareButtons from "@/components/blog/ShareButtons.astro";
+import AuthorCard from "@/components/blog/AuthorCard.astro";
 import { getReadingTime } from "@/lib/reading-time";
+import { resolveAuthor } from "@/lib/authors";
 import JsonLd from "@/components/seo/JsonLd.astro";
 import { seoConfig } from "@/config/seo";
 import { blogPostingSchema, breadcrumbSchema } from "@/components/seo/schemas";
@@ -18,16 +20,23 @@ export async function getStaticPaths() {
     return import.meta.env.PROD ? !data.draft : true;
   })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-  return allPosts.map((post) => ({
+  return Promise.all(allPosts.map(async (post) => ({
     params: { slug: post.id },
-    props: { post, allPosts },
-  }));
+    props: { post, allPosts, author: await resolveAuthor(post.data.author) },
+  })));
 }
 
-const { post, allPosts } = Astro.props;
+const { post, allPosts, author } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTime = getReadingTime(post.body ?? "");
 const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
+const authorSameAs = [
+  author.social.github,
+  author.social.twitter,
+  author.social.linkedin,
+  author.social.mastodon,
+  author.social.website,
+].filter(Boolean);
 ---
 
 <BaseLayout
@@ -48,6 +57,11 @@ const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
       heroImage: post.data.heroImage?.src,
       slug: post.id,
       category: post.data.category,
+      author: {
+        name: author.name,
+        url: `${seoConfig.siteUrl}/blog/author/${author.id}/`,
+        sameAs: authorSameAs,
+      },
     }, seoConfig.siteUrl)} />
     <JsonLd schema={breadcrumbSchema([
       { name: "Home", url: seoConfig.siteUrl },
@@ -66,6 +80,7 @@ const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
           updatedDate={post.data.updatedDate}
           tags={post.data.tags}
           category={post.data.category}
+          author={author}
         />
       </div>
       {post.data.heroImage && (
@@ -86,6 +101,9 @@ const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
     </article>
     <div class="mt-8 border-t border-border pt-8">
       <ShareButtons url={postUrl} title={post.data.title} />
+    </div>
+    <div class="mt-8">
+      <AuthorCard author={author} />
     </div>
     <RelatedPosts
       currentSlug={post.id}

@@ -1,0 +1,26 @@
+---
+import { Image } from "astro:assets";
+import type { ResolvedAuthor } from "@/lib/authors";
+
+interface Props {
+  author: ResolvedAuthor;
+}
+
+const { author } = Astro.props;
+---
+
+<span class="inline-flex items-center gap-1.5">
+  <Image
+    src={author.avatar}
+    alt={author.name}
+    width={20}
+    height={20}
+    class="rounded-full"
+  />
+  <a
+    href={`/blog/author/${author.id}/`}
+    class="relative z-10 hover:underline"
+  >
+    {author.name}
+  </a>
+</span>

@@ -1,5 +1,7 @@
 ---
 import FormattedDate from "./FormattedDate.astro";
+import AuthorByline from "./AuthorByline.astro";
+import type { ResolvedAuthor } from "@/lib/authors";
 
 interface Props {
   title: string;
@@ -8,9 +10,10 @@ interface Props {
   slug: string;
   tags?: string[];
   category?: string;
+  author?: ResolvedAuthor;
 }
 
-const { title, description, date, slug, tags = [], category } = Astro.props;
+const { title, description, date, slug, tags = [], category, author } = Astro.props;
 ---
 
 <article class="group relative rounded-xl border border-border bg-card p-6 shadow-xs transition-colors hover:bg-accent">
@@ -22,6 +25,12 @@ const { title, description, date, slug, tags = [], category } = Astro.props;
     </h2>
     <p class="text-sm text-muted-foreground">{description}</p>
     <div class="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      {author && (
+        <>
+          <AuthorByline author={author} />
+          <span aria-hidden="true">&middot;</span>
+        </>
+      )}
       <FormattedDate date={date} />
       {category && (
         <>
