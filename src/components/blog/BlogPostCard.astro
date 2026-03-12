@@ -7,9 +7,10 @@ interface Props {
   date: Date;
   slug: string;
   tags?: string[];
+  category?: string;
 }
 
-const { title, description, date, slug, tags = [] } = Astro.props;
+const { title, description, date, slug, tags = [], category } = Astro.props;
 ---
 
 <article class="group relative rounded-xl border border-border bg-card p-6 shadow-xs transition-colors hover:bg-accent">
@@ -22,6 +23,17 @@ const { title, description, date, slug, tags = [] } = Astro.props;
     <p class="text-sm text-muted-foreground">{description}</p>
     <div class="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
       <FormattedDate date={date} />
+      {category && (
+        <>
+          <span aria-hidden="true">&middot;</span>
+          <a
+            href={`/blog/category/${category.toLowerCase()}/`}
+            class="relative z-10 text-primary hover:underline"
+          >
+            {category}
+          </a>
+        </>
+      )}
       {tags.length > 0 && (
         <>
           <span aria-hidden="true">&middot;</span>

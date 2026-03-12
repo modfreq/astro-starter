@@ -5,6 +5,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogPostMeta from "@/components/blog/BlogPostMeta.astro";
 import TableOfContents from "@/components/blog/TableOfContents.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
+import ShareButtons from "@/components/blog/ShareButtons.astro";
 import { getReadingTime } from "@/lib/reading-time";
 import JsonLd from "@/components/seo/JsonLd.astro";
 import { seoConfig } from "@/config/seo";
@@ -26,12 +27,14 @@ export async function getStaticPaths() {
 const { post, allPosts } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTime = getReadingTime(post.body ?? "");
+const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
 ---
 
 <BaseLayout
   title={post.data.title}
   description={post.data.description}
-  image={post.data.heroImage?.src}
+  image={post.data.heroImage?.src ?? `/og/${post.id}.png`}
+  canonicalUrl={post.data.canonical}
   type="article"
   publishedDate={post.data.date}
   updatedDate={post.data.updatedDate}
@@ -44,6 +47,7 @@ const readingTime = getReadingTime(post.body ?? "");
       updatedDate: post.data.updatedDate,
       heroImage: post.data.heroImage?.src,
       slug: post.id,
+      category: post.data.category,
     }, seoConfig.siteUrl)} />
     <JsonLd schema={breadcrumbSchema([
       { name: "Home", url: seoConfig.siteUrl },
@@ -61,6 +65,7 @@ const readingTime = getReadingTime(post.body ?? "");
           readingTime={readingTime}
           updatedDate={post.data.updatedDate}
           tags={post.data.tags}
+          category={post.data.category}
         />
       </div>
       {post.data.heroImage && (
@@ -79,6 +84,9 @@ const readingTime = getReadingTime(post.body ?? "");
         <Content />
       </div>
     </article>
+    <div class="mt-8 border-t border-border pt-8">
+      <ShareButtons url={postUrl} title={post.data.title} />
+    </div>
     <RelatedPosts
       currentSlug={post.id}
       currentTags={post.data.tags}

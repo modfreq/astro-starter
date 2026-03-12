@@ -16,27 +16,45 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     return import.meta.env.PROD ? !data.draft : true;
   })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-  return paginate(posts, { pageSize: PAGE_SIZE });
+  const categoryMap = new Map<string, string>();
+  for (const post of posts) {
+    if (post.data.category) {
+      categoryMap.set(post.data.category.toLowerCase(), post.data.category);
+    }
+  }
+
+  return [...categoryMap.entries()].flatMap(([slug, displayName]) => {
+    const filtered = posts.filter(
+      (p) => p.data.category?.toLowerCase() === slug,
+    );
+    return paginate(filtered, {
+      params: { category: slug },
+      props: { displayName },
+      pageSize: PAGE_SIZE,
+    });
+  });
 }
 
-const { page } = Astro.props;
-const title = page.currentPage === 1 ? "Blog" : `Blog — Page ${page.currentPage}`;
+const { category } = Astro.params;
+const { page, displayName } = Astro.props;
+const title = page.currentPage === 1
+  ? `Category: ${displayName}`
+  : `Category: ${displayName} — Page ${page.currentPage}`;
 ---
 
-<BaseLayout title={title} description="Thoughts, guides, and updates from the Astro Starter template.">
+<BaseLayout title={title} description={`Posts in the "${displayName}" category.`}>
   <Fragment slot="head">
     <JsonLd schema={breadcrumbSchema([
       { name: "Home", url: seoConfig.siteUrl },
       { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
+      { name: `Category: ${displayName}`, url: `${seoConfig.siteUrl}/blog/category/${category}/` },
     ])} />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}
     {page.url.next && <link rel="next" href={page.url.next} />}
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
-    <h1 class="text-4xl font-bold">{title}</h1>
-    <p class="mt-4 text-lg text-muted-foreground">
-      Thoughts, guides, and updates.
-    </p>
+    <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+    <h1 class="mt-4 text-4xl font-bold">{title}</h1>
     <div class="mt-8 flex flex-col gap-4">
       {page.data.map((post) => (
         <BlogPostCard
