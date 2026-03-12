@@ -16,14 +16,18 @@ import { blogPostingSchema, breadcrumbSchema } from "@/components/seo/schemas";
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const allPosts = (await getCollection("blog", ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-  })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const allPosts = (
+    await getCollection("blog", ({ data }) => {
+      return import.meta.env.PROD ? !data.draft : true;
+    })
+  ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-  return Promise.all(allPosts.map(async (post) => ({
-    params: { slug: post.id },
-    props: { post, allPosts, author: await resolveAuthor(post.data.author) },
-  })));
+  return Promise.all(
+    allPosts.map(async (post) => ({
+      params: { slug: post.id },
+      props: { post, allPosts, author: await resolveAuthor(post.data.author) },
+    })),
+  );
 }
 
 const { post, allPosts, author } = Astro.props;
@@ -50,28 +54,40 @@ const authorSameAs = [
   authorName={author.name}
 >
   <Fragment slot="head">
-    <JsonLd schema={blogPostingSchema({
-      title: post.data.title,
-      description: post.data.description,
-      date: post.data.date,
-      updatedDate: post.data.updatedDate,
-      heroImage: post.data.heroImage?.src,
-      slug: post.id,
-      category: post.data.category,
-      author: {
-        name: author.name,
-        url: `${siteConfig.siteUrl}/blog/author/${author.id}/`,
-        sameAs: authorSameAs,
-      },
-    }, siteConfig.siteUrl)} />
-    <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: siteConfig.siteUrl },
-      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
-      { name: post.data.title, url: `${siteConfig.siteUrl}/blog/${post.id}/` },
-    ])} />
+    <JsonLd
+      schema={blogPostingSchema(
+        {
+          title: post.data.title,
+          description: post.data.description,
+          date: post.data.date,
+          updatedDate: post.data.updatedDate,
+          heroImage: post.data.heroImage?.src,
+          slug: post.id,
+          category: post.data.category,
+          author: {
+            name: author.name,
+            url: `${siteConfig.siteUrl}/blog/author/${author.id}/`,
+            sameAs: authorSameAs,
+          },
+        },
+        siteConfig.siteUrl,
+      )}
+    />
+    <JsonLd
+      schema={breadcrumbSchema([
+        { name: "Home", url: siteConfig.siteUrl },
+        { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+        {
+          name: post.data.title,
+          url: `${siteConfig.siteUrl}/blog/${post.id}/`,
+        },
+      ])}
+    />
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
-    <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+    <a href="/blog" class="text-muted-foreground hover:text-foreground text-sm"
+      >&larr; Back to blog</a
+    >
     <article class="mt-8" data-pagefind-body>
       <h1 class="text-4xl font-bold tracking-tight">{post.data.title}</h1>
       <div class="mt-3">
@@ -84,23 +100,25 @@ const authorSameAs = [
           author={author}
         />
       </div>
-      {post.data.heroImage && (
-        <div class="mt-6">
-          <Image
-            src={post.data.heroImage}
-            alt={post.data.heroImageAlt}
-            class="w-full rounded-lg"
-            widths={[480, 768, 1024]}
-            sizes="(max-width: 768px) 100vw, 768px"
-          />
-        </div>
-      )}
+      {
+        post.data.heroImage && (
+          <div class="mt-6">
+            <Image
+              src={post.data.heroImage}
+              alt={post.data.heroImageAlt}
+              class="w-full rounded-lg"
+              widths={[480, 768, 1024]}
+              sizes="(max-width: 768px) 100vw, 768px"
+            />
+          </div>
+        )
+      }
       <TableOfContents headings={headings} />
-      <div class="prose mt-8">
+      <div class="prose prose-neutral dark:prose-invert mt-8 max-w-none">
         <Content />
       </div>
     </article>
-    <div class="mt-8 border-t border-border pt-8">
+    <div class="border-border mt-8 border-t pt-8">
       <ShareButtons url={postUrl} title={post.data.title} />
     </div>
     <div class="mt-8">

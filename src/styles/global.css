@@ -1,5 +1,6 @@
 @import "@fontsource-variable/inter";
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -42,9 +43,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 :root {
@@ -145,84 +146,5 @@ html.no-transitions *::after {
   }
   body {
     @apply bg-background text-foreground;
-  }
-
-  .prose {
-    @apply max-w-none text-foreground leading-relaxed;
-
-    h1 {
-      @apply mt-10 mb-4 text-3xl font-bold tracking-tight;
-    }
-    h2 {
-      @apply mt-8 mb-3 text-2xl font-semibold tracking-tight;
-    }
-    h3 {
-      @apply mt-6 mb-2 text-xl font-semibold;
-    }
-    h4 {
-      @apply mt-4 mb-2 text-lg font-semibold;
-    }
-
-    p {
-      @apply my-4;
-    }
-
-    a {
-      @apply font-medium text-primary underline underline-offset-4 hover:text-primary/80;
-    }
-
-    strong {
-      @apply font-semibold;
-    }
-
-    ul {
-      @apply my-4 ml-6 list-disc;
-    }
-    ol {
-      @apply my-4 ml-6 list-decimal;
-    }
-    li {
-      @apply mt-1;
-    }
-    li > ul,
-    li > ol {
-      @apply my-1;
-    }
-
-    blockquote {
-      @apply my-4 border-l-2 border-border pl-4 italic text-muted-foreground;
-    }
-
-    hr {
-      @apply my-8 border-border;
-    }
-
-    code:not(pre code) {
-      @apply rounded bg-muted px-1.5 py-0.5 text-sm font-medium;
-    }
-
-    pre {
-      @apply my-4 overflow-x-auto rounded-lg bg-muted p-4 text-sm;
-    }
-    pre code {
-      @apply bg-transparent p-0;
-    }
-
-    img {
-      @apply my-6 rounded-lg;
-    }
-
-    table {
-      @apply my-4 w-full text-sm;
-    }
-    thead {
-      @apply border-b border-border;
-    }
-    th {
-      @apply px-4 py-2 text-left font-semibold;
-    }
-    td {
-      @apply border-b border-border px-4 py-2;
-    }
   }
 }
