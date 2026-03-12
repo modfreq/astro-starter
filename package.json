@@ -8,13 +8,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "exec wrangler pages dev dist",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "astro check && tsc --noEmit",
     "astro": "astro",
-    "generate:og": "node scripts/generate-og-default.mjs",
     "prepare": "husky"
   },
   "dependencies": {
