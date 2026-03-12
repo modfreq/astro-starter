@@ -1,3 +1,5 @@
+import { seoConfig } from "@/config/seo";
+
 interface SiteConfig {
   siteName: string;
   siteUrl: string;
@@ -17,6 +19,19 @@ interface BlogPostInput {
 interface BreadcrumbItem {
   name: string;
   url: string;
+}
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface OrganizationInput {
+  name: string;
+  url: string;
+  logo?: string | undefined;
+  description?: string | undefined;
+  sameAs?: string[] | undefined;
 }
 
 export function websiteSchema(config: SiteConfig): Record<string, unknown> {
@@ -46,7 +61,7 @@ export function blogPostingSchema(
     url: `${siteUrl}/blog/${post.slug}/`,
     author: {
       "@type": "Person",
-      name: post.author ?? "Astro Starter",
+      name: post.author ?? seoConfig.author,
     },
   };
 }
@@ -63,5 +78,34 @@ export function breadcrumbSchema(
       name: item.name,
       item: item.url,
     })),
+  };
+}
+
+export function faqSchema(items: FAQItem[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function organizationSchema(
+  org: OrganizationInput,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: org.name,
+    url: org.url,
+    ...(org.logo && { logo: org.logo }),
+    ...(org.description && { description: org.description }),
+    ...(org.sameAs && { sameAs: org.sameAs }),
   };
 }
