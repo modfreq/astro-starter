@@ -14,7 +14,8 @@
     "format:check": "prettier --check .",
     "typecheck": "astro check && tsc --noEmit",
     "astro": "astro",
-    "generate:og": "node scripts/generate-og-default.mjs"
+    "generate:og": "node scripts/generate-og-default.mjs",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.13",
@@ -48,6 +49,10 @@
       "workerd"
     ]
   },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx,astro}": "eslint --fix",
+    "*.{js,mjs,cjs,ts,tsx,astro,json,css,md,mdx,yaml}": "prettier --write"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.7",
     "@types/node": "^25.4.0",
@@ -55,6 +60,8 @@
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.3",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
