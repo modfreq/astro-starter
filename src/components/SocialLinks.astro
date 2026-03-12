@@ -1,0 +1,49 @@
+---
+import GitHub from "@/components/icons/GitHub.astro";
+import Twitter from "@/components/icons/Twitter.astro";
+import LinkedIn from "@/components/icons/LinkedIn.astro";
+import Mastodon from "@/components/icons/Mastodon.astro";
+import Bluesky from "@/components/icons/Bluesky.astro";
+import YouTube from "@/components/icons/YouTube.astro";
+import Instagram from "@/components/icons/Instagram.astro";
+import Globe from "@/components/icons/Globe.astro";
+
+interface Props {
+  social: Partial<Record<string, string>>;
+  iconClass?: string;
+  class?: string;
+}
+
+const { social, iconClass = "size-4", class: className } = Astro.props;
+
+const iconMap = [
+  { key: "github", label: "GitHub", Icon: GitHub },
+  { key: "twitter", label: "Twitter", Icon: Twitter },
+  { key: "linkedin", label: "LinkedIn", Icon: LinkedIn },
+  { key: "mastodon", label: "Mastodon", Icon: Mastodon },
+  { key: "bluesky", label: "Bluesky", Icon: Bluesky },
+  { key: "youtube", label: "YouTube", Icon: YouTube },
+  { key: "instagram", label: "Instagram", Icon: Instagram },
+  { key: "website", label: "Website", Icon: Globe },
+] as const;
+
+const links = iconMap.filter(({ key }) => social[key]);
+---
+
+{
+  links.length > 0 && (
+    <div class={className}>
+      {links.map(({ key, label, Icon }) => (
+        <a
+          href={social[key]}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={label}
+        >
+          <Icon class={iconClass} />
+        </a>
+      ))}
+    </div>
+  )
+}
