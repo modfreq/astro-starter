@@ -1,7 +1,7 @@
 {
   "name": "Astro Starter",
   "bio": "The default author for the Astro Starter template. Replace this with your own bio.",
-  "avatar": "../../assets/images/authors/default.png",
+  "avatar": "../../src/assets/images/authors/default.png",
   "social": {
     "github": "https://github.com",
     "twitter": "",
