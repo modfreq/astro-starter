@@ -1,0 +1,16 @@
+---
+import {
+  PUBLIC_PLAUSIBLE_DOMAIN,
+  PUBLIC_PLAUSIBLE_SCRIPT_URL,
+  PUBLIC_UMAMI_WEBSITE_ID,
+  PUBLIC_UMAMI_SCRIPT_URL,
+} from "astro:env/client";
+---
+
+{PUBLIC_PLAUSIBLE_DOMAIN && (
+  <script is:inline defer data-domain={PUBLIC_PLAUSIBLE_DOMAIN} src={PUBLIC_PLAUSIBLE_SCRIPT_URL}></script>
+)}
+
+{PUBLIC_UMAMI_WEBSITE_ID && (
+  <script is:inline defer data-website-id={PUBLIC_UMAMI_WEBSITE_ID} src={PUBLIC_UMAMI_SCRIPT_URL}></script>
+)}

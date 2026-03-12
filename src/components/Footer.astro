@@ -1,0 +1,10 @@
+---
+import { seoConfig } from "@/config/seo";
+---
+
+<footer class="border-t border-border">
+  <div class="mx-auto flex max-w-3xl items-center justify-between px-4 py-6 text-sm text-muted-foreground">
+    <span>&copy; {new Date().getFullYear()} {seoConfig.siteName}</span>
+    <a href="/rss.xml" class="hover:text-foreground">RSS</a>
+  </div>
+</footer>

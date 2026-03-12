@@ -1,0 +1,57 @@
+---
+import "@/styles/global.css";
+import SEOHead from "@/components/seo/SEOHead.astro";
+import Analytics from "@/components/Analytics.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string | undefined;
+  canonicalUrl?: string | undefined;
+  type?: "website" | "article" | undefined;
+  publishedDate?: Date | undefined;
+  updatedDate?: Date | undefined;
+  noindex?: boolean | undefined;
+}
+
+const { title, description, image, canonicalUrl, type, publishedDate, updatedDate, noindex } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <SEOHead
+      title={title}
+      description={description}
+      image={image}
+      canonicalUrl={canonicalUrl}
+      type={type}
+      publishedDate={publishedDate}
+      updatedDate={updatedDate}
+      noindex={noindex}
+    />
+    <slot name="head" />
+    <Analytics />
+    <script is:inline>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  </head>
+  <body class="flex min-h-screen flex-col font-sans antialiased">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

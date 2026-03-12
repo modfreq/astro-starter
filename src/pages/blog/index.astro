@@ -1,9 +1,7 @@
 ---
-import "@/styles/global.css";
 import { getCollection } from "astro:content";
-import { ModeToggle } from "@/components/ModeToggle";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogPostCard from "@/components/blog/BlogPostCard.astro";
-import SEOHead from "@/components/seo/SEOHead.astro";
 import JsonLd from "@/components/seo/JsonLd.astro";
 import { seoConfig } from "@/config/seo";
 import { breadcrumbSchema } from "@/components/seo/schemas";
@@ -15,50 +13,28 @@ const posts = (await getCollection("blog", ({ data }) => {
 })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <SEOHead title="Blog" description="Thoughts, guides, and updates from the Astro Starter template." />
+<BaseLayout title="Blog" description="Thoughts, guides, and updates from the Astro Starter template.">
+  <Fragment slot="head">
     <JsonLd schema={breadcrumbSchema([
       { name: "Home", url: seoConfig.siteUrl },
       { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
     ])} />
-    <script is:inline>
-      if (
-        localStorage.getItem("theme") === "dark" ||
-        (!localStorage.getItem("theme") &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      }
-    </script>
-  </head>
-  <body class="font-sans antialiased">
-    <main class="mx-auto max-w-3xl px-4 py-16">
-      <div class="flex items-center justify-between">
-        <div>
-          <a href="/" class="text-sm text-muted-foreground hover:text-foreground">&larr; Home</a>
-          <h1 class="mt-2 text-4xl font-bold">Blog</h1>
-        </div>
-        <ModeToggle client:load />
-      </div>
-      <p class="mt-4 text-lg text-muted-foreground">
-        Thoughts, guides, and updates.
-      </p>
-      <div class="mt-8 flex flex-col gap-4">
-        {posts.map((post) => (
-          <BlogPostCard
-            title={post.data.title}
-            description={post.data.description}
-            date={post.data.date}
-            slug={post.id}
-            tags={post.data.tags}
-          />
-        ))}
-      </div>
-    </main>
-  </body>
-</html>
+  </Fragment>
+  <div class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="text-4xl font-bold">Blog</h1>
+    <p class="mt-4 text-lg text-muted-foreground">
+      Thoughts, guides, and updates.
+    </p>
+    <div class="mt-8 flex flex-col gap-4">
+      {posts.map((post) => (
+        <BlogPostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
