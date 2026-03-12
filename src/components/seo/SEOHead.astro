@@ -9,6 +9,7 @@ interface Props {
   type?: "website" | "article" | undefined;
   publishedDate?: Date | undefined;
   updatedDate?: Date | undefined;
+  authorName?: string | undefined;
   noindex?: boolean | undefined;
 }
 
@@ -20,6 +21,7 @@ const {
   type = "website",
   publishedDate,
   updatedDate,
+  authorName,
   noindex = false,
 } = Astro.props;
 
@@ -50,6 +52,9 @@ const ogImage = new URL(image ?? defaultImage, siteUrl).href;
 )}
 {type === "article" && updatedDate && (
   <meta property="article:modified_time" content={updatedDate.toISOString()} />
+)}
+{type === "article" && authorName && (
+  <meta property="article:author" content={authorName} />
 )}
 
 <!-- Twitter Card -->

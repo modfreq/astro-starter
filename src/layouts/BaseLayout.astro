@@ -17,10 +17,11 @@ interface Props {
   type?: "website" | "article" | undefined;
   publishedDate?: Date | undefined;
   updatedDate?: Date | undefined;
+  authorName?: string | undefined;
   noindex?: boolean | undefined;
 }
 
-const { title, description, image, canonicalUrl, type, publishedDate, updatedDate, noindex } = Astro.props;
+const { title, description, image, canonicalUrl, type, publishedDate, updatedDate, authorName, noindex } = Astro.props;
 ---
 
 <html lang={lang}>
@@ -38,6 +39,7 @@ const { title, description, image, canonicalUrl, type, publishedDate, updatedDat
       type={type}
       publishedDate={publishedDate}
       updatedDate={updatedDate}
+      authorName={authorName}
       noindex={noindex}
     />
     <slot name="head" />

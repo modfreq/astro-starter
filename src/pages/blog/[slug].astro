@@ -47,6 +47,7 @@ const authorSameAs = [
   type="article"
   publishedDate={post.data.date}
   updatedDate={post.data.updatedDate}
+  authorName={author.name}
 >
   <Fragment slot="head">
     <JsonLd schema={blogPostingSchema({
