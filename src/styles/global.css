@@ -118,6 +118,19 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Pagefind UI theme overrides */
+:root {
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-primary: var(--primary);
+  --pagefind-ui-text: var(--foreground);
+  --pagefind-ui-background: var(--background);
+  --pagefind-ui-border: var(--border);
+  --pagefind-ui-tag: var(--muted);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 0.5rem;
+  --pagefind-ui-font: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

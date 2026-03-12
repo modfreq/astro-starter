@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
+import pagefind from "astro-pagefind";
 
 // --- Adapter selection (runs before astro:env) ---
 const adapterName = process.env.ADAPTER ?? "cloudflare";
@@ -32,7 +33,7 @@ export default defineConfig({
   site: process.env.SITE_URL || "https://example.com",
   output: "server",
   adapter,
-  integrations: [react(), sitemap(), mdx()],
+  integrations: [react(), sitemap(), mdx(), pagefind()],
   vite: {
     plugins: [/** @type {any} */ (tailwindcss())],
   },
