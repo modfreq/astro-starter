@@ -1,0 +1,68 @@
+---
+import type { GetStaticPathsOptions } from "astro";
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlogPostCard from "@/components/blog/BlogPostCard.astro";
+import Pagination from "@/components/blog/Pagination.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { seoConfig } from "@/config/seo";
+import { breadcrumbSchema } from "@/components/seo/schemas";
+
+export const prerender = true;
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const PAGE_SIZE = 10;
+  const posts = (await getCollection("blog", ({ data }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  return tags.flatMap((tag) => {
+    const filtered = posts.filter((p) => p.data.tags.includes(tag));
+    return paginate(filtered, {
+      params: { tag },
+      pageSize: PAGE_SIZE,
+    });
+  });
+}
+
+const { tag } = Astro.params;
+const { page } = Astro.props;
+const title = page.currentPage === 1
+  ? `Tag: ${tag}`
+  : `Tag: ${tag} — Page ${page.currentPage}`;
+---
+
+<BaseLayout title={title} description={`Posts tagged "${tag}".`}>
+  <Fragment slot="head">
+    <JsonLd schema={breadcrumbSchema([
+      { name: "Home", url: seoConfig.siteUrl },
+      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
+      { name: `Tag: ${tag}`, url: `${seoConfig.siteUrl}/blog/tag/${tag}/` },
+    ])} />
+    {page.url.prev && <link rel="prev" href={page.url.prev} />}
+    {page.url.next && <link rel="next" href={page.url.next} />}
+  </Fragment>
+  <div class="mx-auto max-w-3xl px-4 py-16">
+    <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+    <h1 class="mt-4 text-4xl font-bold">{title}</h1>
+    <div class="mt-8 flex flex-col gap-4">
+      {page.data.map((post) => (
+        <BlogPostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+    <Pagination
+      prevUrl={page.url.prev}
+      nextUrl={page.url.next}
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+    />
+  </div>
+</BaseLayout>

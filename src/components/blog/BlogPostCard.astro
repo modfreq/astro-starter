@@ -12,28 +12,31 @@ interface Props {
 const { title, description, date, slug, tags = [] } = Astro.props;
 ---
 
-<a href={`/blog/${slug}`} class="group block">
-  <article class="rounded-xl border border-border bg-card p-6 shadow-xs transition-colors hover:bg-accent">
-    <div class="flex flex-col gap-2">
-      <h2 class="text-lg font-medium group-hover:text-accent-foreground">
+<article class="group relative rounded-xl border border-border bg-card p-6 shadow-xs transition-colors hover:bg-accent">
+  <div class="flex flex-col gap-2">
+    <h2 class="text-lg font-medium group-hover:text-accent-foreground">
+      <a href={`/blog/${slug}`} class="after:absolute after:inset-0">
         {title}
-      </h2>
-      <p class="text-sm text-muted-foreground">{description}</p>
-      <div class="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <FormattedDate date={date} />
-        {tags.length > 0 && (
-          <>
-            <span aria-hidden="true">&middot;</span>
-            <div class="flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-xs font-medium text-foreground">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      </a>
+    </h2>
+    <p class="text-sm text-muted-foreground">{description}</p>
+    <div class="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+      <FormattedDate date={date} />
+      {tags.length > 0 && (
+        <>
+          <span aria-hidden="true">&middot;</span>
+          <div class="flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <a
+                href={`/blog/tag/${tag}/`}
+                class="relative z-10 inline-flex h-5 items-center rounded-full border border-border px-2 text-xs font-medium text-foreground hover:bg-accent-foreground hover:text-accent"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </>
+      )}
     </div>
-  </article>
-</a>
+  </div>
+</article>
