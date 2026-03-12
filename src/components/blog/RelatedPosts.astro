@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BlogPostCard from "./BlogPostCard.astro";
+
+interface Props {
+  currentSlug: string;
+  currentTags: string[];
+  allPosts: CollectionEntry<"blog">[];
+}
+
+const { currentSlug, currentTags, allPosts } = Astro.props;
+
+const related = allPosts
+  .filter((p) => p.id !== currentSlug)
+  .map((p) => ({
+    post: p,
+    shared: p.data.tags.filter((t) => currentTags.includes(t)).length,
+  }))
+  .filter((r) => r.shared > 0)
+  .sort((a, b) => b.shared - a.shared || b.post.data.date.valueOf() - a.post.data.date.valueOf())
+  .slice(0, 3)
+  .map((r) => r.post);
+---
+
+{related.length > 0 && (
+  <aside class="mt-16 border-t border-border pt-10">
+    <h2 class="text-2xl font-bold">Related Posts</h2>
+    <div class="mt-6 flex flex-col gap-4">
+      {related.map((post) => (
+        <BlogPostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          tags={post.data.tags}
+        />
+      ))}
+    </div>
+  </aside>
+)}
