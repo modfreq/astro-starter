@@ -1,7 +1,7 @@
 import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import { generateOgImage } from "@/lib/og-image";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 export const prerender = true;
 
@@ -20,7 +20,7 @@ export async function GET({ props }: { props: { title: string; description: stri
   const png = await generateOgImage({
     title: props.title,
     description: props.description,
-    siteName: seoConfig.siteName,
+    siteName: siteConfig.siteName,
   });
 
   return new Response(png, {

@@ -5,7 +5,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogPostCard from "@/components/blog/BlogPostCard.astro";
 import Pagination from "@/components/blog/Pagination.astro";
 import JsonLd from "@/components/seo/JsonLd.astro";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { breadcrumbSchema } from "@/components/seo/schemas";
 import { resolveAuthor } from "@/lib/authors";
 import type { ResolvedAuthor } from "@/lib/authors";
@@ -45,9 +45,9 @@ const authorMap = new Map<string, ResolvedAuthor>(
 <BaseLayout title={title} description={`Posts tagged "${tag}".`}>
   <Fragment slot="head">
     <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: seoConfig.siteUrl },
-      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
-      { name: `Tag: ${tag}`, url: `${seoConfig.siteUrl}/blog/tag/${tag}/` },
+      { name: "Home", url: siteConfig.siteUrl },
+      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+      { name: `Tag: ${tag}`, url: `${siteConfig.siteUrl}/blog/tag/${tag}/` },
     ])} />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}
     {page.url.next && <link rel="next" href={page.url.next} />}

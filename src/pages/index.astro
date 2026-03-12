@@ -2,13 +2,13 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Button } from "@/components/ui/button";
 import JsonLd from "@/components/seo/JsonLd.astro";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { websiteSchema } from "@/components/seo/schemas";
 ---
 
-<BaseLayout title={seoConfig.siteName} description={seoConfig.siteDescription}>
+<BaseLayout title={siteConfig.siteName} description={siteConfig.siteDescription}>
   <Fragment slot="head">
-    <JsonLd schema={websiteSchema(seoConfig)} />
+    <JsonLd schema={websiteSchema(siteConfig)} />
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="text-4xl font-bold">Astro Starter</h1>

@@ -1,5 +1,5 @@
 ---
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 interface Props {
   title: string;
@@ -25,11 +25,14 @@ const {
   noindex = false,
 } = Astro.props;
 
-const { siteName, siteUrl, defaultImage, locale, twitterHandle } = seoConfig;
+const { siteName, siteUrl, defaultImage, locale, social } = siteConfig;
 
 const formattedTitle = title === siteName ? siteName : `${title} — ${siteName}`;
 const canonical = canonicalUrl ?? new URL(Astro.url.pathname, siteUrl).href;
 const ogImage = new URL(image ?? defaultImage, siteUrl).href;
+const twitterHandle = social.twitter
+  ? `@${social.twitter.replace(/^https?:\/\/(x|twitter)\.com\//, "").replace(/\/+$/, "")}`
+  : "";
 ---
 
 <title>{formattedTitle}</title>

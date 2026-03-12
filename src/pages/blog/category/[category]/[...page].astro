@@ -5,7 +5,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogPostCard from "@/components/blog/BlogPostCard.astro";
 import Pagination from "@/components/blog/Pagination.astro";
 import JsonLd from "@/components/seo/JsonLd.astro";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { breadcrumbSchema } from "@/components/seo/schemas";
 
 export const prerender = true;
@@ -45,9 +45,9 @@ const title = page.currentPage === 1
 <BaseLayout title={title} description={`Posts in the "${displayName}" category.`}>
   <Fragment slot="head">
     <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: seoConfig.siteUrl },
-      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
-      { name: `Category: ${displayName}`, url: `${seoConfig.siteUrl}/blog/category/${category}/` },
+      { name: "Home", url: siteConfig.siteUrl },
+      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+      { name: `Category: ${displayName}`, url: `${siteConfig.siteUrl}/blog/category/${category}/` },
     ])} />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}
     {page.url.next && <link rel="next" href={page.url.next} />}

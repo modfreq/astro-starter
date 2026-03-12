@@ -10,7 +10,7 @@ import AuthorCard from "@/components/blog/AuthorCard.astro";
 import { getReadingTime } from "@/lib/reading-time";
 import { resolveAuthor } from "@/lib/authors";
 import JsonLd from "@/components/seo/JsonLd.astro";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { blogPostingSchema, breadcrumbSchema } from "@/components/seo/schemas";
 
 export const prerender = true;
@@ -29,7 +29,7 @@ export async function getStaticPaths() {
 const { post, allPosts, author } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTime = getReadingTime(post.body ?? "");
-const postUrl = new URL(`/blog/${post.id}/`, seoConfig.siteUrl).href;
+const postUrl = new URL(`/blog/${post.id}/`, siteConfig.siteUrl).href;
 const authorSameAs = [
   author.social.github,
   author.social.twitter,
@@ -60,14 +60,14 @@ const authorSameAs = [
       category: post.data.category,
       author: {
         name: author.name,
-        url: `${seoConfig.siteUrl}/blog/author/${author.id}/`,
+        url: `${siteConfig.siteUrl}/blog/author/${author.id}/`,
         sameAs: authorSameAs,
       },
-    }, seoConfig.siteUrl)} />
+    }, siteConfig.siteUrl)} />
     <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: seoConfig.siteUrl },
-      { name: "Blog", url: `${seoConfig.siteUrl}/blog/` },
-      { name: post.data.title, url: `${seoConfig.siteUrl}/blog/${post.id}/` },
+      { name: "Home", url: siteConfig.siteUrl },
+      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+      { name: post.data.title, url: `${siteConfig.siteUrl}/blog/${post.id}/` },
     ])} />
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">

@@ -1,5 +1,5 @@
 ---
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 interface Props {
   date: Date;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { date, class: className } = Astro.props;
-const dateLocale = seoConfig.locale.replace("_", "-");
+const dateLocale = siteConfig.locale.replace("_", "-");
 ---
 
 <time datetime={date.toISOString()} class={className}>

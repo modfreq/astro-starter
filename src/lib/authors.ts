@@ -1,5 +1,5 @@
 import { getEntry } from "astro:content";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 export interface ResolvedAuthor {
   id: string;
@@ -17,12 +17,12 @@ export interface ResolvedAuthor {
 
 /**
  * Resolve an author by collection ID. Falls back to the default author,
- * then to a synthetic author from seoConfig if no collection entry exists.
+ * then to a synthetic author from siteConfig if no collection entry exists.
  */
 export async function resolveAuthor(
   id?: string,
 ): Promise<ResolvedAuthor> {
-  const authorId = id || seoConfig.defaultAuthorId;
+  const authorId = id || siteConfig.defaultAuthorId;
 
   const entry = await getEntry("authors", authorId);
   if (entry) {
@@ -36,8 +36,8 @@ export async function resolveAuthor(
   }
 
   // Fall back to default author entry
-  if (authorId !== seoConfig.defaultAuthorId) {
-    const defaultEntry = await getEntry("authors", seoConfig.defaultAuthorId);
+  if (authorId !== siteConfig.defaultAuthorId) {
+    const defaultEntry = await getEntry("authors", siteConfig.defaultAuthorId);
     if (defaultEntry) {
       return {
         id: defaultEntry.id,
@@ -49,13 +49,13 @@ export async function resolveAuthor(
     }
   }
 
-  // Last resort: synthetic author from seoConfig (no avatar/social)
+  // Last resort: synthetic author from siteConfig (no avatar/social)
   const { default: fallbackAvatar } = await import(
     "@/assets/images/authors/default.png"
   );
   return {
     id: "default",
-    name: seoConfig.author,
+    name: siteConfig.author,
     bio: "",
     avatar: fallbackAvatar,
     social: {

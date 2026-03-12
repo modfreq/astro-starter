@@ -1,4 +1,4 @@
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 interface SiteConfig {
   siteName: string;
@@ -79,7 +79,7 @@ export function blogPostingSchema(
       }
       return {
         "@type": "Person" as const,
-        name: (post.author as string | undefined) ?? seoConfig.author,
+        name: (post.author as string | undefined) ?? siteConfig.author,
       };
     })(),
   };

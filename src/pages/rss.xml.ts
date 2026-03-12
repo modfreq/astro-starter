@@ -1,7 +1,7 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
 export const prerender = true;
 
@@ -11,8 +11,8 @@ export async function GET(context: APIContext) {
   ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: seoConfig.siteName,
-    description: seoConfig.siteDescription,
+    title: siteConfig.siteName,
+    description: siteConfig.siteDescription,
     site: context.site!.toString(),
     items: posts.map((post) => ({
       title: post.data.title,

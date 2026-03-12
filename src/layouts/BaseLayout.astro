@@ -5,9 +5,9 @@ import SEOHead from "@/components/seo/SEOHead.astro";
 import Analytics from "@/components/Analytics.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import { seoConfig } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 
-const lang = seoConfig.locale.split("_")[0];
+const lang = siteConfig.locale.split("_")[0];
 
 interface Props {
   title: string;
