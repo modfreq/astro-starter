@@ -15,7 +15,6 @@ import type { ResolvedAuthor } from "@/lib/authors";
 export const prerender = true;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const PAGE_SIZE = 10;
   const posts = (
     await getCollection("blog", ({ data }) => {
       return import.meta.env.PROD ? !data.draft : true;
@@ -33,7 +32,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     return paginate(filtered, {
       params: { author: authorId },
       props: { author: authorMap.get(authorId)! },
-      pageSize: PAGE_SIZE,
+      pageSize: siteConfig.pageSize,
     });
   });
 }

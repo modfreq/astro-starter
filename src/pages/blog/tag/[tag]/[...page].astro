@@ -13,7 +13,6 @@ import type { ResolvedAuthor } from "@/lib/authors";
 export const prerender = true;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const PAGE_SIZE = 10;
   const posts = (
     await getCollection("blog", ({ data }) => {
       return import.meta.env.PROD ? !data.draft : true;
@@ -26,7 +25,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     const filtered = posts.filter((p) => p.data.tags.includes(tag));
     return paginate(filtered, {
       params: { tag },
-      pageSize: PAGE_SIZE,
+      pageSize: siteConfig.pageSize,
     });
   });
 }
@@ -47,7 +46,7 @@ const authorMap = new Map<string, ResolvedAuthor>(
 );
 ---
 
-<BaseLayout title={title} description={`Posts tagged "${tag}".`} noindex={true}>
+<BaseLayout title={title} description={`Posts tagged "${tag}".`}>
   <Fragment slot="head">
     <JsonLd
       schema={breadcrumbSchema([

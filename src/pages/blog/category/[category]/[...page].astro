@@ -11,10 +11,11 @@ import { breadcrumbSchema } from "@/components/seo/schemas";
 export const prerender = true;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const PAGE_SIZE = 10;
-  const posts = (await getCollection("blog", ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-  })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const posts = (
+    await getCollection("blog", ({ data }) => {
+      return import.meta.env.PROD ? !data.draft : true;
+    })
+  ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   const categoryMap = new Map<string, string>();
   for (const post of posts) {
@@ -30,42 +31,55 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     return paginate(filtered, {
       params: { category: slug },
       props: { displayName },
-      pageSize: PAGE_SIZE,
+      pageSize: siteConfig.pageSize,
     });
   });
 }
 
 const { category } = Astro.params;
 const { page, displayName } = Astro.props;
-const title = page.currentPage === 1
-  ? `Category: ${displayName}`
-  : `Category: ${displayName} — Page ${page.currentPage}`;
+const title =
+  page.currentPage === 1
+    ? `Category: ${displayName}`
+    : `Category: ${displayName} — Page ${page.currentPage}`;
 ---
 
-<BaseLayout title={title} description={`Posts in the "${displayName}" category.`}>
+<BaseLayout
+  title={title}
+  description={`Posts in the "${displayName}" category.`}
+>
   <Fragment slot="head">
-    <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: siteConfig.siteUrl },
-      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
-      { name: `Category: ${displayName}`, url: `${siteConfig.siteUrl}/blog/category/${category}/` },
-    ])} />
+    <JsonLd
+      schema={breadcrumbSchema([
+        { name: "Home", url: siteConfig.siteUrl },
+        { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+        {
+          name: `Category: ${displayName}`,
+          url: `${siteConfig.siteUrl}/blog/category/${category}/`,
+        },
+      ])}
+    />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}
     {page.url.next && <link rel="next" href={page.url.next} />}
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
-    <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+    <a href="/blog" class="text-muted-foreground hover:text-foreground text-sm"
+      >&larr; Back to blog</a
+    >
     <h1 class="mt-4 text-4xl font-bold">{title}</h1>
     <div class="mt-8 flex flex-col gap-4">
-      {page.data.map((post) => (
-        <BlogPostCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          slug={post.id}
-          tags={post.data.tags}
-          category={post.data.category}
-        />
-      ))}
+      {
+        page.data.map((post) => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            slug={post.id}
+            tags={post.data.tags}
+            category={post.data.category}
+          />
+        ))
+      }
     </div>
     <Pagination
       prevUrl={page.url.prev}

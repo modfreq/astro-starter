@@ -31,4 +31,6 @@ export const siteConfig = {
     instagram: "",
     website: "",
   },
+  // Pagination
+  pageSize: 10,
 } as const;
