@@ -8,7 +8,7 @@ import Pagination from "@/components/blog/Pagination.astro";
 import JsonLd from "@/components/seo/JsonLd.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import { siteConfig } from "@/config/site";
-import { breadcrumbSchema } from "@/components/seo/schemas";
+import { breadcrumbSchema, personSchema } from "@/components/seo/schemas";
 import { resolveAuthor } from "@/lib/authors";
 import type { ResolvedAuthor } from "@/lib/authors";
 
@@ -44,18 +44,32 @@ const title =
   page.currentPage === 1
     ? `Posts by ${author.name}`
     : `Posts by ${author.name} — Page ${page.currentPage}`;
+
+const authorUrl = `${siteConfig.siteUrl}/blog/author/${authorParam}/`;
+const authorSameAs = [
+  author.social.github,
+  author.social.twitter,
+  author.social.linkedin,
+  author.social.mastodon,
+  author.social.website,
+].filter(Boolean);
 ---
 
 <BaseLayout title={title} description={`All posts by ${author.name}.`}>
   <Fragment slot="head">
     <JsonLd
+      schema={personSchema({
+        name: author.name,
+        url: authorUrl,
+        description: author.bio || undefined,
+        sameAs: authorSameAs,
+      })}
+    />
+    <JsonLd
       schema={breadcrumbSchema([
         { name: "Home", url: siteConfig.siteUrl },
         { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
-        {
-          name: author.name,
-          url: `${siteConfig.siteUrl}/blog/author/${authorParam}/`,
-        },
+        { name: author.name, url: authorUrl },
       ])}
     />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}

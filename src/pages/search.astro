@@ -1,15 +1,29 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Search from "astro-pagefind/components/Search";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import { siteConfig } from "@/config/site";
+import { breadcrumbSchema } from "@/components/seo/schemas";
 
 export const prerender = true;
 ---
 
 <BaseLayout title="Search" description="Search all blog posts and pages.">
+  <Fragment slot="head">
+    <JsonLd
+      schema={breadcrumbSchema([
+        { name: "Home", url: siteConfig.siteUrl },
+        { name: "Search", url: `${siteConfig.siteUrl}/search/` },
+      ])}
+    />
+  </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="text-4xl font-bold">Search</h1>
     <div class="mt-8">
-      <Search id="search" uiOptions={{ showSubResults: true, showImages: false }} />
+      <Search
+        id="search"
+        uiOptions={{ showSubResults: true, showImages: false }}
+      />
     </div>
   </div>
 </BaseLayout>

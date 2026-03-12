@@ -14,9 +14,11 @@ export const prerender = true;
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const PAGE_SIZE = 10;
-  const posts = (await getCollection("blog", ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true;
-  })).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const posts = (
+    await getCollection("blog", ({ data }) => {
+      return import.meta.env.PROD ? !data.draft : true;
+    })
+  ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
 
@@ -31,42 +33,51 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { tag } = Astro.params;
 const { page } = Astro.props;
-const title = page.currentPage === 1
-  ? `Tag: ${tag}`
-  : `Tag: ${tag} — Page ${page.currentPage}`;
+const title =
+  page.currentPage === 1
+    ? `Tag: ${tag}`
+    : `Tag: ${tag} — Page ${page.currentPage}`;
 
 const authorIds = [...new Set(page.data.map((p) => p.data.author))];
-const authorEntries = await Promise.all(authorIds.map((id) => resolveAuthor(id)));
+const authorEntries = await Promise.all(
+  authorIds.map((id) => resolveAuthor(id)),
+);
 const authorMap = new Map<string, ResolvedAuthor>(
   authorIds.map((id, i) => [id, authorEntries[i]]),
 );
 ---
 
-<BaseLayout title={title} description={`Posts tagged "${tag}".`}>
+<BaseLayout title={title} description={`Posts tagged "${tag}".`} noindex={true}>
   <Fragment slot="head">
-    <JsonLd schema={breadcrumbSchema([
-      { name: "Home", url: siteConfig.siteUrl },
-      { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
-      { name: `Tag: ${tag}`, url: `${siteConfig.siteUrl}/blog/tag/${tag}/` },
-    ])} />
+    <JsonLd
+      schema={breadcrumbSchema([
+        { name: "Home", url: siteConfig.siteUrl },
+        { name: "Blog", url: `${siteConfig.siteUrl}/blog/` },
+        { name: `Tag: ${tag}`, url: `${siteConfig.siteUrl}/blog/tag/${tag}/` },
+      ])}
+    />
     {page.url.prev && <link rel="prev" href={page.url.prev} />}
     {page.url.next && <link rel="next" href={page.url.next} />}
   </Fragment>
   <div class="mx-auto max-w-3xl px-4 py-16">
-    <a href="/blog" class="text-sm text-muted-foreground hover:text-foreground">&larr; Back to blog</a>
+    <a href="/blog" class="text-muted-foreground hover:text-foreground text-sm"
+      >&larr; Back to blog</a
+    >
     <h1 class="mt-4 text-4xl font-bold">{title}</h1>
     <div class="mt-8 flex flex-col gap-4">
-      {page.data.map((post) => (
-        <BlogPostCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          slug={post.id}
-          tags={post.data.tags}
-          category={post.data.category}
-          author={authorMap.get(post.data.author)}
-        />
-      ))}
+      {
+        page.data.map((post) => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            slug={post.id}
+            tags={post.data.tags}
+            category={post.data.category}
+            author={authorMap.get(post.data.author)}
+          />
+        ))
+      }
     </div>
     <Pagination
       prevUrl={page.url.prev}

@@ -66,7 +66,10 @@ export function blogPostingSchema(
     }),
     ...(post.heroImage && { image: `${siteUrl}${post.heroImage}` }),
     url: `${siteUrl}/blog/${post.slug}/`,
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/blog/${post.slug}/` },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${post.slug}/`,
+    },
     ...(post.category && { articleSection: post.category }),
     author: (() => {
       if (typeof post.author === "object" && post.author) {
@@ -112,6 +115,26 @@ export function faqSchema(items: FAQItem[]): Record<string, unknown> {
         text: item.answer,
       },
     })),
+  };
+}
+
+interface PersonInput {
+  name: string;
+  url: string;
+  description?: string | undefined;
+  image?: string | undefined;
+  sameAs?: string[] | undefined;
+}
+
+export function personSchema(person: PersonInput): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.name,
+    url: person.url,
+    ...(person.description && { description: person.description }),
+    ...(person.image && { image: person.image }),
+    ...(person.sameAs?.length && { sameAs: person.sameAs }),
   };
 }
 
