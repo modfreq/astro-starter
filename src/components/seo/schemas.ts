@@ -14,6 +14,7 @@ interface BlogPostInput {
   heroImage?: string | undefined;
   slug: string;
   author?: string | undefined;
+  category?: string | undefined;
 }
 
 interface BreadcrumbItem {
@@ -59,6 +60,8 @@ export function blogPostingSchema(
     }),
     ...(post.heroImage && { image: `${siteUrl}${post.heroImage}` }),
     url: `${siteUrl}/blog/${post.slug}/`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/blog/${post.slug}/` },
+    ...(post.category && { articleSection: post.category }),
     author: {
       "@type": "Person",
       name: post.author ?? seoConfig.author,
