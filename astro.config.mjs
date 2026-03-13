@@ -33,6 +33,9 @@ export default defineConfig({
   site: process.env.SITE_URL || "https://example.com",
   output: "server",
   adapter,
+  build: {
+    assets: "assets",
+  },
   integrations: [react(), sitemap(), mdx(), pagefind()],
   vite: {
     plugins: [/** @type {any} */ (tailwindcss())],
